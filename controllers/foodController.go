@@ -155,15 +155,12 @@ func UpdateFood() gin.HandlerFunc {
 		if food.Name != nil {
 			updateObj = append(updateObj, bson.E{"name", food.Name})
 		}
-
 		if food.Price != nil {
 			updateObj = append(updateObj, bson.E{"price", food.Price})
 		}
-
 		if food.Food_image != nil {
 			updateObj = append(updateObj, bson.E{"food_image", food.Food_image})
 		}
-
 		if food.Menu_id != nil {
 			err := menuCollection.FindOne(ctx, bson.M{"menu_id": food.Menu_id}).Decode(&menu)
 			defer cancel()
