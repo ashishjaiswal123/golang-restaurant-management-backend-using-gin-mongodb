@@ -18,6 +18,7 @@ import (
 
 var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
 
+// getting all the menus from DB
 func GetMenus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -35,6 +36,7 @@ func GetMenus() gin.HandlerFunc {
 	}
 }
 
+// getting menu with menu ID from DB
 func GetMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -51,6 +53,7 @@ func GetMenu() gin.HandlerFunc {
 	}
 }
 
+// creating menu in DB
 func CreateMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -82,22 +85,23 @@ func CreateMenu() gin.HandlerFunc {
 	}
 }
 
+// func to check whether start date is after current date & end date after start date
 func inTimeSpan(start, end, check time.Time) bool {
 	return start.After(time.Now()) && end.After(start)
 }
 
+// updating menu with menu ID in DB
 func UpdateMenu() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		var menu models.Menu
 
+		menuId := c.Param("menu_id")
+
 		if err := c.BindJSON(&menu); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
-		menuId := c.Param("menu_id")
-		filter := bson.M{"menu_id": menuId}
 
 		var updateObj primitive.D
 		if menu.Start_Date != nil && menu.End_Date != nil {
@@ -121,6 +125,7 @@ func UpdateMenu() gin.HandlerFunc {
 			updateObj = append(updateObj, bson.E{"updated_at", menu.Updated_at})
 
 			upsert := true
+			filter := bson.M{"menu_id": menuId}
 			opt := options.UpdateOptions{
 				Upsert: &upsert,
 			}
