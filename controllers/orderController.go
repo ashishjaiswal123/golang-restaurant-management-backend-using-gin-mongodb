@@ -151,11 +151,14 @@ func UpdateOrder() gin.HandlerFunc {
 	}
 }
 
+// inserting new order in DB
 func OrderItemOrderCreator(order models.Order) string {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 
 	order.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	order.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+	order.ID = primitive.NewObjectID()
+	order.Order_id = order.ID.Hex()
 
 	orderCollection.InsertOne(ctx, order)
 	defer cancel()
