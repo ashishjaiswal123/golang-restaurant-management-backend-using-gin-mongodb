@@ -12,5 +12,5 @@ type Table struct {
 	Table_number     *int               `json:"table_number" validate:"required"`
 	Created_at       time.Time          `json:"created_at"`
 	Updated_at       time.Time          `json:"updated_at"`
-	Table_id         *string            `josn:"table_id"`
+	Table_id         string             `josn:"table_id"`
 }
